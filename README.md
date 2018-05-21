@@ -1,7 +1,7 @@
 # OnyxFXAPI
 Gradle source code repository for OnyxFxAPI, a RESTful API written in Java with Spring Boot.
 This project doubled as an demonstration of the Java10 HTTP APIS for my blog post, http://bit.ly/XXXXXXXXX.
-Built and tested on SUSE Linux.
+Built and tested on SUSE Linux. Hosted @ https://onyxfx-api.herokuapp.com/nbaBasicStatBean .
 
 <p align="center"> <img width="633" height="221" src="https://raw.githubusercontent.com/afinlay5/OnyxFxAPI/master/onyx.png"> </p>
 <!-- ![alt text](https://raw.githubusercontent.com/afinlay5/OnyxFX/master/blog.png) -->

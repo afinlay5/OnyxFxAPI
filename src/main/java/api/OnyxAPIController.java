@@ -2,7 +2,7 @@
 =================================================================================
 LICENSE: GNU GPL V2 (https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
-OnyxFX, an app to query NBA statistical data.
+OnyxFX, an app to query NBA® statistical data.
 Copyright (C) <2018>  ADRIAN D. FINLAY.
 
 This program is free software; you can redistribute it and/or modify
@@ -39,11 +39,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OnyxAPIController {	    
-	/* https://onyxfx-api.herokuapp.com/nbaBasicStatBean?firstName=Terry?surname=Rozier?season=2016 */
+	
+	/* https://onyxfx-api.herokuapp.com/nbaBasicStatBean?firstName=Kobe&surname=Bryant&season=2006 */
     @RequestMapping(method=RequestMethod.GET, value="/nbaBasicStatBean")
     public NBAStatBean nbaBasicStatBean (@RequestParam(value="firstName", defaultValue="NBA") String firstName, 
     									@RequestParam(value="surname", defaultValue="Player") String surname, 
-    									@RequestParam(value="season", defaultvalue="0000") int season) {
+    									@RequestParam(value="season", defaultValue="0000") int season) {
         return new NBAStatBean(firstName, surname, season);
     }
 }

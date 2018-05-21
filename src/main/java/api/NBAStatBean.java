@@ -2,7 +2,7 @@
 =================================================================================
 LICENSE: GNU GPL V2 (https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
-OnyxFX, an app to query NBA statistical data.
+OnyxFX, an app to query NBA® statistical data.
 Copyright (C) <2018>  ADRIAN D. FINLAY.
 
 This program is free software; you can redistribute it and/or modify
@@ -33,14 +33,11 @@ package api;
 
 import java.net.URI;
 import java.util.Scanner;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+/* Java 11 APIs */
+// import java.net.http.HttpClient;
+// import java.net.http.HttpRequest;
+// import java.net.http.HttpResponse;
 import java.net.URISyntaxException;
-import java.net.http.HttpResponse.BodyHandlers;
 
 
 public class NBAStatBean {
@@ -93,21 +90,30 @@ public class NBAStatBean {
             //Webpage to scrape
             var URI = getURI(firstName, surname);
 
-            //Http Request, Response
-            var request = HttpRequest.newBuilder().uri(URI).build();
-            var HTTP_RESPONSE = HttpClient.newHttpClient().send(request, BodyHandlers.ofInputStream());
+            /* HTTP GET Request, Response (Java 11 APIs) */
+            // var request = HttpRequest.newBuilder().uri(URI).build();
+            // var HTTP_RESPONSE = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofInputStream());
+
+            //HTTP GET Request, Response (Pre-Java 11)
+            var con = (java.net.HttpURLConnection) URI.toURL().openConnection();
+            con.setRequestMethod("GET");
+            var HTTP_RESPONSE = con.getInputStream();
 
             //Status Code
-            var statusCode = HTTP_RESPONSE.statusCode();
+            // var statusCode = HTTP_RESPONSE.statusCode(); (Java 11 API)
+            var statusCode = con.getResponseCode(); //(Pre- Java 11)
                         
             //Success
-            if (statusCode == 200 || statusCode == 201)
-                setBasicStatLine(HTTP_RESPONSE.body(), season+1);
+            if (statusCode == 200 || statusCode == 201) {
+                // setBasicStatLine(HTTP_RESPONSE.body(), season+1); (Java 11 API)
+                setBasicStatLine(HTTP_RESPONSE, season+1); //(Pre-Java 11 )
+            }
             //Otherwise
             else { 
                 badInstance();
             }
-        } catch (URISyntaxException | IOException | InterruptedException e) { badInstance(); }
+        // } catch (URISyntaxException | java.io.IOException | java.lang.InterruptedException e) { badInstance(); } (Java 11 API throws InterruptedException)
+        } catch (URISyntaxException | java.io.IOException e) { System.out.println("Exception: " + e.getCause()); badInstance(); }
     };
 
     //utility methods
@@ -146,12 +152,12 @@ public class NBAStatBean {
                 return surname.substring(0,5).toLowerCase();
         }
     };
-    private void setBasicStatLine(InputStream in, int year) {
+    private void setBasicStatLine(java.io.InputStream in, int year) {
 
         //consider jsoup for the future.
 
         var scanner = new Scanner(in);
-        var html_sb = new StringBuilder();
+        var html = new StringBuilder();
         var record = false;
         var begin = new StringBuilder("id=\"per_game.").append(year).append("\"");
         var end = new StringBuilder("id=\"per_game.").append(year+1).append("\"");
@@ -160,14 +166,8 @@ public class NBAStatBean {
         while (scanner.hasNext()) {
             var next = scanner.next();
 
-            //season not found
-            if (!next.contains("per_game." + year)) {
-                badInstance();
-                return;
-            }
-            
             //from here
-            else if (next.contains(begin)){
+            if (next.contains(begin)){
                 record = true;
                 continue;
             }
@@ -177,32 +177,40 @@ public class NBAStatBean {
             }
             //apend 
             else if ( !next.contains(begin) && record == true) {
-                html_sb.append(next);
+                html.append(next);
             }
             else 
                 continue;
         }
-        
+
+        System.gc();
+
+        //season not found
+        if (!record) {
+            badInstance();
+            return;
+        }  
+
         //RPG
-        html_sb.delete(0, (html_sb.indexOf("trb_per_g\">")+("trb_per_g\">".length())));
+        html.delete(0, (html.indexOf("trb_per_g\">")+("trb_per_g\">".length())));
         //remove career high boldface
-        if (html_sb.substring(0, "<strong>".length()).equals("<strong>"))
-            html_sb.delete(0, "<strong>".length());
-        setRPG(Double.parseDouble(html_sb.substring(0, html_sb.indexOf("<"))));
+        if (html.substring(0, "<strong>".length()).equals("<strong>"))
+            html.delete(0, "<strong>".length());
+        setRPG(Double.parseDouble(html.substring(0, html.indexOf("<"))));
 
         //APG
-        html_sb.delete(0, (html_sb.indexOf("ast_per_g\">")+("ast_per_g\">".length())));
+        html.delete(0, (html.indexOf("ast_per_g\">")+("ast_per_g\">".length())));
         //remove career high boldface
-        if (html_sb.substring(0, "<strong>".length()).equals("<strong>"))
-            html_sb.delete(0, "<strong>".length());
-        setAPG(Double.parseDouble(html_sb.substring(0, html_sb.indexOf("<"))));
+        if (html.substring(0, "<strong>".length()).equals("<strong>"))
+            html.delete(0, "<strong>".length());
+        setAPG(Double.parseDouble(html.substring(0, html.indexOf("<"))));
         
         //PPG
-        html_sb.delete(0, (html_sb.indexOf("pts_per_g\">")+("pts_per_g\">".length())));
+        html.delete(0, (html.indexOf("pts_per_g\">")+("pts_per_g\">".length())));
         //remove career high boldface
-        if (html_sb.substring(0, "<strong>".length()).equals("<strong>"))
-            html_sb.delete(0, "<strong>".length());
-        setPPG(Double.parseDouble(html_sb.substring(0, html_sb.indexOf("<"))));
+        if (html.substring(0, "<strong>".length()).equals("<strong>"))
+            html.delete(0, "<strong>".length());
+        setPPG(Double.parseDouble(html.substring(0, html.indexOf("<"))));
     };
 }
 
