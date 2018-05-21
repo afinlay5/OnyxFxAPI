@@ -32,7 +32,6 @@ Contact: adf5152@live.com
 
 package api;
 
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,10 +39,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OnyxAPIController {	    
-	/* http://localhost:8080/nbaBasicStatBean?firstName=Terry?surname=Rozier */
+	/* https://onyxfx-api.herokuapp.com/nbaBasicStatBean?firstName=Terry?surname=Rozier?season=2016 */
     @RequestMapping(method=RequestMethod.GET, value="/nbaBasicStatBean")
-    public NBAStatBean nbaBasicStatBean (@RequestParam(value="firstName", defaultValue="First Name") String firstName, 
-    									@RequestParam(value="surname", defaultValue="Last name") String surname, int season) {
+    public NBAStatBean nbaBasicStatBean (@RequestParam(value="firstName", defaultValue="NBA") String firstName, 
+    									@RequestParam(value="surname", defaultValue="Player") String surname, 
+    									@RequestParam(value="season", defaultvalue="0000") int season) {
         return new NBAStatBean(firstName, surname, season);
     }
 }

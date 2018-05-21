@@ -14,7 +14,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 bootJar {
-    baseName = 'gs-rest-service'
+    baseName = 'OnyxFxAPI-rest-service'
     version =  '0.1.0'
 }
 
@@ -25,17 +25,10 @@ repositories {
 sourceCompatibility = 1.10
 targetCompatibility = 1.10
 
+// sourceCompatibility = 1.11   -   Enable when JDK11 goes EA -> GA
+// targetCompatibility = 1.11   -   Enable when JDK11 goes EA -> GA
+
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile('org.springframework.boot:spring-boot-starter-test')
-}
-
-compileTestJava {
-    doFirst {
-        options.compilerArgs = [
-            '--module-path', classpath.asPath, 
-            '--add-modules', 'jdk.incubator.httpclient', 
-         ]
-        classpath = files()
-    }
 }
