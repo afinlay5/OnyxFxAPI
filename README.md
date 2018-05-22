@@ -12,7 +12,7 @@ Built and tested on SUSE Linux. Hosted @ https://onyxfx-api.herokuapp.com/nbaBas
 
 # Requirements
 - Gradle 4.7 
-- Java 10+Several. 
+- Java 10+ 
 
 # Endpoints
 - GET /nbaBasicStatBean
