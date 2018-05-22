@@ -31,4 +31,9 @@ Built and tested on SUSE Linux. Hosted @ https://onyxfx-api.herokuapp.com/nbaBas
 - <strike>Several. There is plenty of work to be done on this (05/21/2018).</strike>
 
 # Execution Screenshot
+
+Example of GET /nbaBasicStatBean?firstName="Michael"&surname="Jordan"&season=1988
 ![alt text](https://raw.githubusercontent.com/afinlay5/OnyxFxAPI/master/gradle_run1.png)
+
+Example of GET /nbaBasicStatBean
+![alt text](https://raw.githubusercontent.com/afinlay5/OnyxFxAPI/master/gradle_run2.png)
